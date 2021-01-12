@@ -1,0 +1,16 @@
+<div class="container page-container">
+  <div class="card" *ngIf="gamebook$ | async as gamebook">
+    <div class="card-body">
+      <h5 class="card-title">{{ gamebook.name }}</h5>
+      <!-- <div class="d-flex justify-content-between"> -->
+      <h6 class="card-subtitle mb-2 text-muted">{{ gamebook.series }}</h6>
+      <!-- <h6 class="card-subtitle mb-2 text-muted">{{ gamebook.author }}</h6> -->
+      <!-- </div> -->
+      <p class="card-text">{{ gamebook.description }}</p>
+      <a [routerLink]="['read']" class="btn btn-primary">
+        Go through Adventure
+      </a>
+      <a [routerLink]="['edit']" class="btn btn-secondary"> Edit Adventure </a>
+    </div>
+  </div>
+</div>
