@@ -16,6 +16,15 @@ import { GameBook } from './gamebook.type';
       .card-body .btn:not(:first-of-type) {
         margin-left: 1rem;
       }
+
+      #section-card {
+        margin-top: 1rem;
+      }
+
+      #starting-point {
+        font-style: italic;
+        font-size: 0.7rem;
+      }
     `,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,

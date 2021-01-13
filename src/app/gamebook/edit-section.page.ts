@@ -1,45 +1,84 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { ToastService } from '../toast.service';
+import { ToastService } from '../toast/toast.service';
 import { GamebookService } from './gamebook.service';
-import { GameBook, Section } from './gamebook.type';
+import { Section } from './gamebook.type';
 
 @Component({
   template: `
     <div class="container page-container">
       <div *ngIf="section$ | async as section">
         <div class="card">
+          <h5 class="card-header">{{ section.name }}</h5>
           <div class="card-body">
-            <h5 class="card-title d-flex justify-content-between">
-              <span>{{ section.name }}</span>
-              <div class="btn-group" role="group" aria-label="Basic example">
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  (click)="saveSectionContent()"
-                >
-                  Save Changes
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-secondary"
-                  (click)="revertChanges()"
-                >
-                  Revert Changes
-                </button>
-              </div>
-            </h5>
+            <quill-editor [formControl]="editorContent"> </quill-editor>
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <button
+                type="button"
+                class="btn btn-outline-primary"
+                (click)="saveSectionContent()"
+              >
+                Save Changes
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="revertChanges()"
+              >
+                Revert Changes
+              </button>
+            </div>
           </div>
         </div>
-        <div id="qe-container">
-          <quill-editor [formControl]="editorContent"> </quill-editor>
+        <div id="qe-container"></div>
+        <div class="card progression-container">
+          <h5 class="card-header">Progression</h5>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" *ngIf="!section.progressions.length">
+                This currently has no option.
+              </li>
+              <li
+                class="list-group-item"
+                *ngFor="let prog of section.progressions"
+                [routerLink]="['..', prog.id]"
+              >
+                {{ prog.descriptor }}
+              </li>
+            </ul>
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="createNewProgression()"
+              >
+                Add a new progression option
+              </button>
+              <div ngbDropdown class="d-inline-block">
+                <button
+                  class="btn btn-primary"
+                  id="dropdownBasic1"
+                  ngbDropdownToggle
+                >
+                  Add existing section
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                  <button
+                    ngbDropdownItem
+                    *ngFor="let prog of possibleProgressions$ | async"
+                    (click)="addProgression(prog.id)"
+                  >
+                    {{ prog.name }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <!-- <quill-view [content]="editorContent.value"></quill-view> -->
     </div>
   `,
   styles: [
@@ -48,26 +87,30 @@ import { GameBook, Section } from './gamebook.type';
         display: block;
       }
 
-      #qe-container {
+      #qe-container,
+      .progression-container,
+      .btn-group {
         margin-top: 1rem;
       }
     `,
   ],
 })
 export class EditSectionPage implements OnInit {
-  //[formControl]="editorContent"
   section$: Observable<Section>;
   gamebookId!: number;
   sectionID!: string;
   previousContent!: string;
   editorContent = new FormControl('');
+  possibleProgressions$: Observable<Section[]>;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private gamebookService: GamebookService,
     public toastService: ToastService
   ) {
     this.section$ = new Observable<Section>();
+    this.possibleProgressions$ = new Observable<Section[]>();
   }
 
   ngOnInit(): void {
@@ -75,6 +118,12 @@ export class EditSectionPage implements OnInit {
       switchMap((params) => {
         this.gamebookId = Number(params.get('gamebookId'));
         this.sectionID = String(params.get('sectionId'));
+
+        this.possibleProgressions$ = this.gamebookService.getPossibleProgressions(
+          this.gamebookId,
+          this.sectionID
+        );
+
         return this.gamebookService.getSectionById(
           this.gamebookId,
           this.sectionID
@@ -103,5 +152,27 @@ export class EditSectionPage implements OnInit {
       delay: 1000,
       autohide: true,
     });
+  }
+
+  createNewProgression() {
+    const newId = this.gamebookService.createNewProgression(
+      this.gamebookId,
+      this.sectionID
+    );
+
+    this.router.navigate(['/gamebook', this.gamebookId, 'edit', newId]);
+  }
+
+  addProgression(progressionId: string) {
+    this.gamebookService.addProgression(
+      this.gamebookId,
+      this.sectionID,
+      progressionId
+    );
+
+    this.possibleProgressions$ = this.gamebookService.getPossibleProgressions(
+      this.gamebookId,
+      this.sectionID
+    );
   }
 }

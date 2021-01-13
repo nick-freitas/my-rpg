@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { GamebookService } from '../gamebook/gamebook.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -7,7 +8,11 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavBarComponent implements OnInit {
-  constructor() {}
+  constructor(private gamebookService: GamebookService) {}
 
   ngOnInit(): void {}
+
+  clearLocalStorage() {
+    this.gamebookService.clearLocalStorage();
+  }
 }

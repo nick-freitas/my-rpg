@@ -1,0 +1,17 @@
+<ngb-carousel *ngIf="stories">
+  <ng-template ngbSlide *ngFor="let story of stories">
+    <div class="picsum-img-wrapper">
+      <img [src]="story.img" alt="Random first slide" />
+    </div>
+    <div class="carousel-caption">
+      <button
+        class="btn btn-link"
+        [routerLink]="['gamebook', story.gamebookId]"
+        [disabled]="!story.gamebookId"
+      >
+        <h3>{{ story.name }}</h3>
+      </button>
+      <p>{{ story.description }}</p>
+    </div>
+  </ng-template>
+</ngb-carousel>

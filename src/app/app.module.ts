@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { QuillModule } from 'ngx-quill';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -10,10 +11,11 @@ import { NotFoundPage } from './not-found.page';
 import { HomePage } from './home.page';
 import { WelcomeJumbotronComponent } from './welcome-jumbotron/welcome-jumbotron.component';
 import { HomeStoreComponent } from './home-store/home-store.component';
-import { LibraryPage } from './library.page';
+import { LibraryPage } from './library/library.page';
 import { GamebookModule } from './gamebook/gamebook.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ToastComponent } from './toast.component';
+import { ToastComponent } from './toast/toast.component';
+import { FeaturedStoriesComponent } from './featured-stories/featured-stories.component';
+import { PublishedBooksPage } from './published-books/published-books.page';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { ToastComponent } from './toast.component';
     HomeStoreComponent,
     LibraryPage,
     ToastComponent,
+    FeaturedStoriesComponent,
+    PublishedBooksPage,
   ],
   imports: [
     BrowserModule,

@@ -1,16 +1,54 @@
 <div class="container page-container">
-  <div class="card" *ngIf="gamebook$ | async as gamebook">
-    <div class="card-body">
-      <h5 class="card-title">{{ gamebook.name }}</h5>
-      <!-- <div class="d-flex justify-content-between"> -->
-      <h6 class="card-subtitle mb-2 text-muted">{{ gamebook.series }}</h6>
-      <!-- <h6 class="card-subtitle mb-2 text-muted">{{ gamebook.author }}</h6> -->
-      <!-- </div> -->
-      <p class="card-text">{{ gamebook.description }}</p>
-      <a [routerLink]="['read']" class="btn btn-primary">
-        Go through Adventure
-      </a>
-      <a [routerLink]="['edit']" class="btn btn-secondary"> Edit Adventure </a>
+  <div *ngIf="gamebook$ | async as gamebook">
+    <div class="card">
+      <img [src]="gamebook.img" class="card-img-top" />
+      <div class="card-body">
+        <h5 class="card-title">{{ gamebook.name }}</h5>
+        <!-- <div class="d-flex justify-content-between"> -->
+        <h6 class="card-subtitle mb-2 text-muted">{{ gamebook.series }}</h6>
+        <!-- <h6 class="card-subtitle mb-2 text-muted">{{ gamebook.author }}</h6> -->
+        <!-- </div> -->
+        <p class="card-text">{{ gamebook.description }}</p>
+        <a [routerLink]="['read']" class="btn btn-primary"> Read Adventure </a>
+        <!-- <a [routerLink]="['edit']" class="btn btn-secondary">
+          Edit Adventure
+        </a> -->
+      </div>
+    </div>
+
+    <div class="card" id="section-card">
+      <div class="card-body">
+        <h5 class="card-title">Sections</h5>
+        <h6 class="card-subtitle mb-2 text-muted">
+          Only you can see the sections because this is your published adventure
+        </h6>
+        <ul ngbNav #nav="ngbNav" class="nav-tabs">
+          <li ngbNavItem>
+            <a ngbNavLink>List</a>
+            <ng-template ngbNavContent>
+              <div>
+                <ul class="list-group-flush">
+                  <a
+                    class="list-group-item"
+                    *ngFor="let section of gamebook?.sections"
+                    [routerLink]="['edit', section.id]"
+                  >
+                    {{ section.name }}
+                    <span *ngIf="section.isStartingPoint" id="starting-point">
+                      (Starting Point)
+                    </span>
+                  </a>
+                </ul>
+              </div>
+            </ng-template>
+          </li>
+          <li ngbNavItem [disabled]="true">
+            <a ngbNavLink>Graph</a>
+            <ng-template ngbNavContent>TO DO</ng-template>
+          </li>
+        </ul>
+        <div [ngbNavOutlet]="nav"></div>
+      </div>
     </div>
   </div>
 </div>

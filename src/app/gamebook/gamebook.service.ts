@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, timer } from 'rxjs';
 import { GAMEBOOK } from './gamebook.data';
 import { GameBook, Section } from './gamebook.type';
 
@@ -11,6 +11,10 @@ export class GamebookService {
     this.gamebooks = [];
 
     this.loadStateFromLocalStorage();
+  }
+
+  clearLocalStorage() {
+    localStorage.removeItem('mrpg-gamebooks');
   }
 
   saveStateToLocalStorage() {
@@ -40,17 +44,72 @@ export class GamebookService {
     return of(this.gamebooks.find((gb: GameBook) => gb.id === _id)!);
   }
 
-  getSectionById(gamebookID: number, sectionId: string): Observable<Section> {
+  getStartingPointId(gamebookId: number) {
     return of(
       this.gamebooks
-        .find((gb: GameBook) => gb.id === gamebookID)
+        .find((gb: GameBook) => gb.id === gamebookId)
+        ?.sections.find((s) => s.isStartingPoint)?.id!
+    );
+  }
+
+  getSectionById(gamebookId: number, sectionId: string): Observable<Section> {
+    // otherwise we have the id we want to grab
+    return of(
+      this.gamebooks
+        .find((gb: GameBook) => gb.id === gamebookId)
         ?.sections.find((s) => s.id === sectionId)!
     );
   }
 
-  saveSectionContent(gamebookID: number, sectionId: string, content: string) {
+  getPossibleProgressions(
+    gamebookId: number,
+    sectionId: string
+  ): Observable<Section[]> {
+    const currentProgressions = this.findSection(gamebookId, sectionId)
+      .progressions;
+    let sections = this.gamebooks.find((gb: GameBook) => gb.id === gamebookId)
+      ?.sections!;
+    sections = sections.filter((s) => s.id !== sectionId);
+    sections = sections.filter(
+      (s) => !currentProgressions.find((p) => p.id === s.id)
+    );
+
+    return of(sections);
+  }
+
+  findSection(gamebookId: number, sectionId: string): Section {
+    return this.gamebooks
+      .find((gb) => gb.id === gamebookId)
+      ?.sections.find((s) => s.id === sectionId)!;
+  }
+
+  addProgression(
+    gamebookId: number,
+    sectionId: string,
+    progressionId: string
+  ): void {
     this.gamebooks = this.gamebooks.map((gb) => {
-      if (gb.id === gamebookID) {
+      if (gb.id === gamebookId) {
+        gb.sections = gb.sections.map((s) => {
+          if (s.id === sectionId) {
+            const newProg = this.findSection(gamebookId, progressionId);
+            s.progressions.push({ id: newProg.id, descriptor: newProg.name });
+          }
+
+          return s;
+        });
+      }
+
+      return gb;
+    });
+
+    console.log('a');
+    this.saveStateToLocalStorage();
+  }
+
+  saveSectionContent(gamebookId: number, sectionId: string, content: string) {
+    this.gamebooks = this.gamebooks.map((gb) => {
+      if (gb.id === gamebookId) {
         gb.sections = gb.sections.map((s) => {
           if (s.id === sectionId) {
             s.content = content;
@@ -64,5 +123,39 @@ export class GamebookService {
     });
 
     this.saveStateToLocalStorage();
+  }
+
+  createNewProgression(gamebookId: number, sectionId: string) {
+    const newId = 'NEWSECTION';
+
+    this.gamebooks = this.gamebooks.map((gb) => {
+      if (gb.id === gamebookId) {
+        const newSection: Section = {
+          id: newId,
+          content: '',
+          name: 'New Section',
+          isStartingPoint: false,
+          progressions: [],
+        };
+
+        gb.sections.push(newSection);
+        gb.sections = gb.sections.map((s) => {
+          if (s.id === sectionId) {
+            s.progressions.push({
+              id: newSection.id,
+              descriptor: newSection.name,
+            });
+          }
+
+          return s;
+        });
+      }
+
+      return gb;
+    });
+
+    this.saveStateToLocalStorage();
+
+    return newId;
   }
 }

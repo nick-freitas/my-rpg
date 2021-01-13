@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomePage } from './home.page';
 import { LearnMorePage } from './learn-more/learn-more.page';
-import { LibraryPage } from './library.page';
+import { LibraryPage } from './library/library.page';
 import { NotFoundPage } from './not-found.page';
+import { PublishedBooksPage as PublishedBooksPage } from './published-books/published-books.page';
 
 const routes: Routes = [
   {
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: 'library',
     component: LibraryPage,
+  },
+  {
+    path: 'published-books',
+    component: PublishedBooksPage,
   },
   {
     path: 'gamebook',

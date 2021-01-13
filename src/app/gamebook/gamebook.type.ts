@@ -2,11 +2,13 @@ export type Section = {
   id: string;
   name: string;
   content: string;
-  progressions: { id: number; descriptor: string }[];
+  isStartingPoint?: boolean;
+  progressions: { id: string; descriptor: string }[];
 };
 
 export type GameBook = {
   id: number;
+  img?: string;
   author: string;
   name: string;
   description: string;

@@ -22,6 +22,10 @@ const routes: Routes = [
     path: ':gamebookId/read',
     component: ReadGamebookPage,
   },
+  {
+    path: ':gamebookId/read/:sectionId',
+    component: ReadGamebookPage,
+  },
 ];
 
 @NgModule({

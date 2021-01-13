@@ -13,30 +13,11 @@ import { GameBook } from './gamebook.type';
           <h5 class="card-title">{{ gamebook.name }}</h5>
         </div>
       </div>
-
-      <div class="card" id="section-card">
-        <div class="card-body">
-          <h5 class="card-title">Sections</h5>
-          <div>
-            <ul class="list-group-flush">
-              <li
-                class="list-group-item"
-                *ngFor="let section of (gamebook$ | async)?.sections"
-                [routerLink]="[section.id]"
-              >
-                {{ section.name }}
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
   `,
   styles: [
     `
-      #section-card {
-        margin-top: 1rem;
-      }
+      
     `,
   ],
 })

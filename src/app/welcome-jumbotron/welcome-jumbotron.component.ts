@@ -4,7 +4,13 @@ import { timer } from 'rxjs';
 @Component({
   selector: 'app-welcome-jumbotron',
   templateUrl: './welcome-jumbotron.component.html',
-  styles: [],
+  styles: [
+    `
+      :host {
+        display: block;
+      }
+    `,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WelcomeJumbotronComponent implements OnInit {

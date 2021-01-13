@@ -4,21 +4,16 @@ import { GamebookService } from '../gamebook/gamebook.service';
 import { GameBook } from '../gamebook/gamebook.type';
 
 @Component({
-  selector: 'app-home-store',
-  templateUrl: './home-store.component.html',
+  templateUrl: './published-books.page.html',
   styles: [
     `
       :host {
         display: block;
       }
-
-      .system-logo {
-        padding-right: 1rem;
-      }
     `,
   ],
 })
-export class HomeStoreComponent implements OnInit {
+export class PublishedBooksPage implements OnInit {
   store$: Observable<GameBook[]>;
 
   constructor(public gamebookService: GamebookService) {

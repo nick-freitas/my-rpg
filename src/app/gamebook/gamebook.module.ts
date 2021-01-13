@@ -8,6 +8,7 @@ import { ReadGamebookPage } from './read-gamebook.page';
 import { EditSectionPage } from './edit-section.page';
 import { QuillModule } from 'ngx-quill';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     GamebookRoutingModule,
     QuillModule,
     ReactiveFormsModule,
+    NgbNavModule,
+    NgbDropdownModule,
   ],
   providers: [GamebookService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -1,0 +1,25 @@
+<div class="container page-container">
+  <div class="card" *ngIf="gamebook$ | async as gamebook">
+    <div class="card-body">
+      <h5 class="card-title">{{ gamebook.name }}</h5>
+    </div>
+  </div>
+
+  <quill-view [content]="sectionContent"></quill-view>
+
+  <div
+    class="btn-group"
+    role="group"
+    aria-label="Basic example"
+    *ngIf="section$|async as section"
+  >
+    <button
+      type="button"
+      class="btn btn-primary"
+      *ngFor="let prog of section.progressions"
+      [routerLink]="['/gamebook',gamebookId, 'read', prog.id]"
+    >
+      {{prog.descriptor}}
+    </button>
+  </div>
+</div>
