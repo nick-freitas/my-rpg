@@ -16,7 +16,11 @@
       </div>
     </div>
 
-    <div class="card" id="section-card">
+    <div
+      class="card"
+      id="section-card"
+      *ngIf="gamebook.author === (user$ | async)?.user?.id"
+    >
       <div class="card-body">
         <h5 class="card-title">Sections</h5>
         <h6 class="card-subtitle mb-2 text-muted">
@@ -42,9 +46,35 @@
               </div>
             </ng-template>
           </li>
-          <li ngbNavItem [disabled]="true">
+          <li ngbNavItem>
             <a ngbNavLink>Graph</a>
-            <ng-template ngbNavContent>TO DO</ng-template>
+            <!-- <ng-template ngbNavContent>
+              <ngx-graph
+                class="chart-container"
+                [view]="[1000, 800]"
+                [showMiniMap]="false"
+                [links]="this.links"
+                [nodes]="this.nodes"
+              >
+                <ng-template #nodeTemplate let-node>
+                  <svg:g class="node">
+                    <svg:rect
+                      [attr.width]="100"
+                      [attr.height]="100"
+                      [attr.fill]="node.data.color"
+                    />
+                    <svg:text
+                      alignment-baseline="central"
+                      [attr.x]="10"
+                      [attr.y]="100 / 2"
+                      style="color: white"
+                    >
+                      {{node.label}}
+                    </svg:text>
+                  </svg:g>
+                </ng-template>
+              </ngx-graph>
+            </ng-template> -->
           </li>
         </ul>
         <div [ngbNavOutlet]="nav"></div>

@@ -15,7 +15,9 @@
       </div>
       <p class="mb-1">{{ item.description | slice: 0:30 }}...</p>
       <div class="d-flex justify-content-between">
-        <small>{{ item.author }}</small>
+        <small>{{
+          (this.userService.getPublicUserInfo(item.author) | async)?.name
+        }}</small>
         <small style="font-style: italic" *ngIf="item.series"
           >{{ item.series }}
           <!-- <span *ngIf="item.seriesTotal">

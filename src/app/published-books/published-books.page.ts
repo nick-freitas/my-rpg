@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { GamebookService } from '../gamebook/gamebook.service';
-import { GameBook } from '../gamebook/gamebook.type';
+import { GameBook } from '../gamebook/gamebook.model';
+import { UserService } from '../user/user.service';
 
 @Component({
   templateUrl: './published-books.page.html',
@@ -14,10 +15,13 @@ import { GameBook } from '../gamebook/gamebook.type';
   ],
 })
 export class PublishedBooksPage implements OnInit {
-  store$: Observable<GameBook[]>;
+  gamebooks$: Observable<GameBook[]>;
 
-  constructor(public gamebookService: GamebookService) {
-    this.store$ = this.gamebookService.getGamebooks();
+  constructor(
+    public gamebookService: GamebookService,
+    public userService: UserService
+  ) {
+    this.gamebooks$ = this.gamebookService.getPublishedAdventures();
   }
 
   ngOnInit(): void {}

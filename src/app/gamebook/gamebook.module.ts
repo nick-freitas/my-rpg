@@ -9,6 +9,7 @@ import { EditSectionPage } from './edit-section.page';
 import { QuillModule } from 'ngx-quill';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxGraphModule } from '@swimlane/ngx-graph';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
     ReactiveFormsModule,
     NgbNavModule,
     NgbDropdownModule,
+    NgxGraphModule,
   ],
   providers: [GamebookService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

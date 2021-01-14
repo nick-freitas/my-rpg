@@ -1,13 +1,22 @@
+//https://medium.com/@usman_qb/angular-11-state-management-with-ngrx-side-effects-1d37830fbd64
+
 import { Injectable } from '@angular/core';
+import { select, Store } from '@ngrx/store';
 import { Observable, of, timer } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+import AppState from '../app-state.model';
+import { UserService } from '../user/user.service';
 import { GAMEBOOK } from './gamebook.data';
-import { GameBook, Section } from './gamebook.type';
+import { GameBook, Section } from './gamebook.model';
 
 @Injectable()
 export class GamebookService {
   gamebooks: GameBook[];
 
-  constructor() {
+  constructor(
+    private userService: UserService,
+    private store: Store<AppState>
+  ) {
     this.gamebooks = [];
 
     this.loadStateFromLocalStorage();
@@ -42,6 +51,31 @@ export class GamebookService {
     // It tells TypeScript that even though something looks like it could be null,
     // ""it can trust you that it's not"" -- HA!
     return of(this.gamebooks.find((gb: GameBook) => gb.id === _id)!);
+  }
+
+  getPublishedAdventures(): Observable<GameBook[]> {
+    return this.store.pipe(
+      select('user'),
+      mergeMap((user) =>
+        of(this.gamebooks.filter((gb) => gb.author === user.user?.id))
+      )
+    );
+  }
+
+  getLibrary(): Observable<GameBook[]> {
+    return this.store.pipe(
+      select('user'),
+      mergeMap((user) => {
+        const library: GameBook[] = [];
+        this.gamebooks.forEach((gb: GameBook) => {
+          if (user.user?.library?.find((lib) => lib === gb.id)) {
+            library.push(gb);
+          }
+        });
+
+        return of(library);
+      })
+    );
   }
 
   getStartingPointId(gamebookId: number) {

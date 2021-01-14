@@ -1,11 +1,11 @@
-import { GameBook } from './gamebook.type';
+import { GameBook } from './gamebook.model';
 
 export const GAMEBOOK: GameBook[] = [
   {
     id: 1,
     img:
       'https://media.dnd.wizards.com/styles/story_banner/public/images/head-banner/G30FYHMw8D.jpg',
-    author: 'Nick Freitas',
+    author: 1,
     name: `Wizard's Choice`,
     description: 'This is an example Adventure',
     series: 'The First Example Adventure Series',
@@ -41,6 +41,37 @@ export const GAMEBOOK: GameBook[] = [
       {
         id: 'AdventureBegins',
         name: 'Adventure Begins',
+        content: 'Why did you pick that? Go back man.',
+        progressions: [
+          { id: 'Brewski', descriptor: 'Brewski' },
+          { id: 'KeepGoing', descriptor: 'Keep Going' },
+        ],
+      },
+      {
+        id: 'Brewski',
+        name: 'Brewski',
+        content: 'Why did you pick that? Go back man.',
+        progressions: [
+          { id: 'QuestConvo', descriptor: 'Quest Conversation' },
+          { id: 'Replenish', descriptor: 'Replenish' },
+        ],
+      },
+      {
+        id: 'KeepGoing',
+        name: 'Keep Going',
+        content: 'Why did you pick that? Go back man.',
+        progressions: [{ id: 'Replenish', descriptor: 'Replenish' }],
+      },
+
+      {
+        id: 'QuestConvo',
+        name: 'Quest Conversation',
+        content: 'Why did you pick that? Go back man.',
+        progressions: [],
+      },
+      {
+        id: 'Replenish',
+        name: 'Replenish',
         content: 'Why did you pick that? Go back man.',
         progressions: [],
       },

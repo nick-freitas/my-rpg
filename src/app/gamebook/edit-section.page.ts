@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { ToastService } from '../toast/toast.service';
 import { GamebookService } from './gamebook.service';
-import { Section } from './gamebook.type';
+import { Section } from './gamebook.model';
 
 @Component({
   template: `

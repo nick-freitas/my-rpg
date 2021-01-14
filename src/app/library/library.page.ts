@@ -1,4 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Observable } from 'rxjs';
+import { GameBook } from '../gamebook/gamebook.model';
+import { GamebookService } from '../gamebook/gamebook.service';
+import { UserService } from '../user/user.service';
 
 @Component({
   templateUrl: './library.page.html',
@@ -12,7 +16,14 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LibraryPage implements OnInit {
-  constructor() {}
+  gamebooks$: Observable<GameBook[]>;
+
+  constructor(
+    public gamebookService: GamebookService,
+    public userService: UserService
+  ) {
+    this.gamebooks$ = this.gamebookService.getLibrary();
+  }
 
   ngOnInit(): void {}
 }

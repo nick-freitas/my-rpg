@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { GamebookService } from './gamebook.service';
-import { GameBook, Section } from './gamebook.type';
+import { GameBook, Section } from './gamebook.model';
 import { Router } from '@angular/router';
 
 @Component({

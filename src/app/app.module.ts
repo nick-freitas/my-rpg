@@ -1,3 +1,4 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -16,6 +17,12 @@ import { GamebookModule } from './gamebook/gamebook.module';
 import { ToastComponent } from './toast/toast.component';
 import { FeaturedStoriesComponent } from './featured-stories/featured-stories.component';
 import { PublishedBooksPage } from './published-books/published-books.page';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import * as fromUser from './user/user.reducer';
+import { environment } from 'src/environments/environment';
+import { EffectsModule } from '@ngrx/effects';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -30,13 +37,23 @@ import { PublishedBooksPage } from './published-books/published-books.page';
     ToastComponent,
     FeaturedStoriesComponent,
     PublishedBooksPage,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     GamebookModule,
     NgbModule,
+    BrowserAnimationsModule,
     QuillModule.forRoot(),
+    StoreModule.forRoot({
+      user: fromUser.reducer,
+    }),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: environment.production,
+    }),
+    EffectsModule.forRoot([]),
   ],
   providers: [],
   bootstrap: [AppComponent],

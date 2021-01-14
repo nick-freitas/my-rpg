@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { GamebookService } from './gamebook.service';
-import { GameBook } from './gamebook.type';
+import { GameBook } from './gamebook.model';
 
 @Component({
   template: `
@@ -15,11 +15,7 @@ import { GameBook } from './gamebook.type';
       </div>
     </div>
   `,
-  styles: [
-    `
-      
-    `,
-  ],
+  styles: [``],
 })
 export class EditGamebookPage implements OnInit {
   gamebook$: Observable<GameBook>;
