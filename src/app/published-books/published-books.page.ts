@@ -15,7 +15,7 @@ import { UserService } from '../user/user.service';
   ],
 })
 export class PublishedBooksPage implements OnInit {
-  gamebooks$: Observable<GameBook[]>;
+  gamebooks$: Observable<GameBook[]> | undefined;
 
   constructor(
     public gamebookService: GamebookService,

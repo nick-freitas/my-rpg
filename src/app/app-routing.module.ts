@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AuthGuard } from './auth.guard';
 import { HomePage } from './home.page';
 import { LearnMorePage } from './learn-more/learn-more.page';
 import { LibraryPage } from './library/library.page';
+import { LoginPage } from './login/login.page';
+import { LogoutPage } from './logout.page';
 import { NotFoundPage } from './not-found.page';
 import { PublishedBooksPage as PublishedBooksPage } from './published-books/published-books.page';
 
@@ -13,16 +16,26 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
+    path: 'login',
+    component: LoginPage,
+  },
+  {
+    path: 'logout',
+    component: LogoutPage,
+  },
+  {
     path: 'learn-more',
     component: LearnMorePage,
   },
   {
     path: 'library',
     component: LibraryPage,
+    canActivate: [AuthGuard],
   },
   {
     path: 'published-books',
     component: PublishedBooksPage,
+    canActivate: [AuthGuard],
   },
   {
     path: 'gamebook',

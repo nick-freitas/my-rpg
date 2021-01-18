@@ -23,6 +23,13 @@ import * as fromUser from './user/user.reducer';
 import { environment } from 'src/environments/environment';
 import { EffectsModule } from '@ngrx/effects';
 import { FooterComponent } from './footer/footer.component';
+import { AngularFireModule } from '@angular/fire';
+import { LoginPage } from './login/login.page';
+import { ReactiveFormsModule } from '@angular/forms';
+import { LoginModeComponent } from './login/login-mode.component';
+import { LogoutPage } from './logout.page';
+import { RegisterModeComponent } from './login/register-mode.component';
+import { UserProfileComponent } from './user/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -38,12 +45,18 @@ import { FooterComponent } from './footer/footer.component';
     FeaturedStoriesComponent,
     PublishedBooksPage,
     FooterComponent,
+    LoginPage,
+    LoginModeComponent,
+    LogoutPage,
+    RegisterModeComponent,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     GamebookModule,
     NgbModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     QuillModule.forRoot(),
     StoreModule.forRoot({
@@ -54,6 +67,7 @@ import { FooterComponent } from './footer/footer.component';
       logOnly: environment.production,
     }),
     EffectsModule.forRoot([]),
+    AngularFireModule.initializeApp(environment.firebase),
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -1,44 +1,108 @@
 import { Injectable } from '@angular/core';
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+} from '@angular/fire/firestore';
 import { Store } from '@ngrx/store';
+import { AngularFireAuth } from '@angular/fire/auth';
+import firebase from 'firebase/app';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { map, mergeAll, switchMap } from 'rxjs/operators';
 import AppState from '../app-state.model';
-import { LoginAction } from './user.actions';
+import { LocalStorageKeys } from '../local-storage-keys';
 import { User } from './user.model';
+
+interface LoginRegisterValues {
+  email: string;
+  password: string;
+  persistLogin: boolean;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private users: User[];
+  isLoggedIn$: BehaviorSubject<boolean>;
+  user$: Observable<User | null | undefined>;
 
-  constructor(private store: Store<AppState>) {
-    this.users = [
-      { id: 1, name: 'Nick Freitas', roles: ['admin'], password: '123' },
-      { id: 2, name: 'Naizak Bellemsieh', library: [1] },
-      { id: 3, name: 'Brandon Charest', library: [1] },
-      { id: 4, name: 'Geena Melcher', library: [1] },
-      { id: 5, name: 'Andy Mitchell', roles: [] },
-    ];
+  constructor(
+    private store: Store<AppState>,
+    private firestore: AngularFirestore,
+    public auth: AngularFireAuth
+  ) {
+    this.isLoggedIn$ = new BehaviorSubject<boolean>(false);
+    const persistLastLogin = localStorage.getItem(
+      LocalStorageKeys.PersistLogin
+    );
 
-    this._debug_setInitialUser();
+    // add && has unexpired token
+    if (persistLastLogin) {
+      this.isLoggedIn$.next(true);
+    }
+
+    this.user$ = this.auth.authState.pipe(
+      switchMap((user) => {
+        if (user) {
+          return this.firestore.doc<User>(`users/${user.uid}`).valueChanges();
+        }
+
+        return of(null);
+      })
+    );
   }
 
-  getPublicUserInfo(userId: number): Observable<User> {
-    //blacklist
-    const { roles, ...rest } = this.users?.find((user) => user.id === userId)!;
-
-    return of(rest);
+  logout() {
+    return this.auth.signOut();
   }
 
-  _debug_getUserList(): User[] {
-    return this.users;
+  async register({ email, password, persistLogin }: LoginRegisterValues) {
+    let credentials;
+    try {
+      await this.auth.createUserWithEmailAndPassword(email, password);
+    } catch (error) {
+      throw error.message;
+    }
+
+    this.handlePostLogin(persistLogin, credentials);
   }
 
-  _debug_setInitialUser() {
-    this.store.dispatch(LoginAction(this.users[0]));
+  async login({
+    email,
+    password,
+    persistLogin,
+  }: LoginRegisterValues): Promise<void> {
+    let credentials;
+    try {
+      credentials = await this.auth.signInWithEmailAndPassword(email, password);
+    } catch (error) {
+      throw error.message;
+    }
+
+    this.handlePostLogin(persistLogin, credentials);
   }
 
-  _debug_setCurrentUser(user: User): void {
-    this.store.dispatch(LoginAction(user));
+  handlePostLogin(persistLogin: boolean, credentials: any) {
+    if (persistLogin) {
+      this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    } else {
+      this.auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+    }
+
+    return this.updateUser(credentials.user);
+  }
+
+  private updateUser({ uid, email, displayName, photoURL }: any) {
+    const userRef: AngularFirestoreDocument<User> = this.firestore.doc(
+      `users/${uid}`
+    );
+
+    const data = {
+      id: uid,
+      email,
+      displayName,
+      photoURL,
+    };
+
+    return userRef.set(data, { merge: true });
   }
 }

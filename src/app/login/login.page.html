@@ -1,0 +1,54 @@
+<div *ngIf="this.userService.user$ | async as user; else login">
+  <div class="container page-container">
+    <div class="card d-flex align-items-center">
+      <h3 i18n>You are already logged in as {{user.displayName}}</h3>
+      <h5 i18n>
+        Go back to <a routerLink="/">home</a> or
+        <a routerLink="/logout">logout</a>
+      </h5>
+    </div>
+  </div>
+</div>
+
+<ng-template #login>
+  {{this.mode}}
+  <div class="container page-container col-md-4">
+    <app-login-mode
+      *ngIf="this.mode === 'LOGIN'"
+      (changeToRegisterMode)="this.registerInstead($event)"
+    ></app-login-mode>
+
+    <app-register-mode
+      *ngIf="this.mode === 'REGISTER'"
+      (changeToLoginMode)="this.loginInstead($event)"
+    ></app-register-mode>
+
+    <!-- <div class="card" *ngIf="this.mode ==='REGISTER'">
+      <h5 class="card-header">Register</h5>
+      <div class="card-body d-flex flex-column">
+        <p class="card-text">
+          With supporting text below as a natural lead-in to additional content.
+        </p>
+        
+      </div>
+    </div> -->
+
+    <!-- <div class="card" *ngIf="this.mode === 'RESET_PASSWORD'">
+      <h5 class="card-header">Register</h5>
+      <div class="card-body d-flex flex-column">
+        <p class="card-text"></p>
+        <div class="input-group mb-3">
+          <input
+            type="email"
+            class="form-control"
+            placeholder="Email"
+            aria-label="Email"
+            aria-describedby="basic-addon1"
+          />
+        </div>
+        <a (click)="sendResetLink()" class="btn btn-primary">Send Reset Link</a>
+        <a (click)="this.loginInstead()" class="card-link"> Back to Login </a>
+      </div>
+    </div> -->
+  </div>
+</ng-template>

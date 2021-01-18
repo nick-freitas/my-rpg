@@ -17,87 +17,54 @@
       id="navbarSupportedContent"
     >
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="library" routerLinkActive="active">
+        <li class="nav-item" *ngIf="this.userService.user$ | async as user">
+          <a
+            class="nav-link"
+            routerLink="library"
+            routerLinkActive="active"
+            i18n
+          >
             Library
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="this.userService.user$ | async as user">
           <a
             class="nav-link"
             routerLink="published-books"
             routerLinkActive="active"
+            i18n
           >
             Published Adventures
           </a>
         </li>
-        <!-- <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            id="navbarDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            Dropdown
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </li>
-          </ul>
-        </li> -->
-        <!-- <li class="nav-item">
-          <a
-            class="nav-link disabled"
-            href="#"
-            tabindex="-1"
-            aria-disabled="true"
-          >
-            Disabled
-          </a>
-        </li> -->
       </ul>
-      <!-- <form class="d-flex">
-        <input
-          class="form-control me-2"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-        />
-        <button class="btn btn-success" type="submit" disabled>Search</button>
-      </form> -->
+
       <div>
-        <button class="btn"></button>
-        <div class="btn-group dropleft">
-          <button
-            type="button"
-            class="btn btn-danger dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            {{ (user$ | async)?.user?.name }}
+        <ng-template #login>
+          <button class="btn btn-primary" routerLink="login" i18n>
+            Log In
           </button>
-          <ul class="dropdown-menu">
-            <li *ngFor="let user of users">
-              <a
-                class="dropdown-item"
-                (click)="this.userService._debug_setCurrentUser(user)"
-              >
-                {{ user.name }}
-              </a>
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <a class="dropdown-item" href="#" (click)="clearLocalStorage()">
-                Clear LS
-              </a>
-            </li>
-          </ul>
+        </ng-template>
+
+        <div
+          ngbDropdown
+          class="d-inline-block"
+          *ngIf="this.userService.user$ | async as user; else login"
+        >
+          <button
+            class="btn btn-outline-primary"
+            id="dropdownBasic1"
+            ngbDropdownToggle
+          >
+            {{ user.displayName }}
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button ngbDropdownItem routerLink="profile" i18n>
+              My Profile
+            </button>
+            <div class="dropdown-divider"></div>
+            <button ngbDropdownItem (click)="logout()" i18n>Logout</button>
+          </div>
         </div>
       </div>
     </div>

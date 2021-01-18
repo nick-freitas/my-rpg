@@ -17,11 +17,11 @@ import { Router } from '@angular/router';
   ],
 })
 export class ReadGamebookPage implements OnInit {
-  gamebook$: Observable<GameBook>;
-  section$: Observable<Section>;
-  gamebookId!: number;
-  sectionId!: string | null;
-  sectionContent!: string;
+  gamebook$: Observable<GameBook | undefined>;
+  section$: Observable<Section | undefined>;
+  gamebookId: string | undefined;
+  sectionId: string | undefined;
+  sectionContent: string | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,31 +39,21 @@ export class ReadGamebookPage implements OnInit {
     // why does switchmap/pipe not work
     this.route.paramMap.subscribe((pm) => {
       const sid = pm.get('sectionId');
-      this.gamebookId = Number(pm.get('gamebookId'));
+      this.gamebookId = String(pm.get('gamebookId'));
 
       console.log(sid);
       if (!sid) {
-        this.gamebookService
-          .getStartingPointId(this.gamebookId)
-          .subscribe((sid) => {
-            return this.router.navigate([
-              '/gamebook',
-              this.gamebookId,
-              'read',
-              sid,
-            ]);
-          });
+        this.section$ = this.gamebookService.getStartingPointSection(
+          this.gamebookId
+        );
       } else {
         this.sectionId = String(sid);
 
-        this.gamebook$ = this.gamebookService.getGamebookById(this.gamebookId);
+        // this.gamebook$ = this.gamebookService.getGamebookById(this.gamebookId);
 
-        this.section$ = this.gamebookService.getSectionById(
-          this.gamebookId,
-          this.sectionId
-        );
-
-        this.section$.subscribe((s) => (this.sectionContent = s && s.content));
+        this.section$ = this.gamebookService
+          .getSectionById(this.sectionId)
+          .pipe(tap((s) => (this.sectionContent = s && s.content)));
       }
     });
   }

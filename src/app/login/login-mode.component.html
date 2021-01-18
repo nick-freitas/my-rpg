@@ -1,0 +1,59 @@
+<div class="card">
+  <h5 class="card-header" i18n>Login</h5>
+  <div class="card-body">
+    <div class="alert alert-danger" role="alert" *ngIf="this.loginErrorMessage">
+      {{ this.loginErrorMessage }}
+    </div>
+    <form [formGroup]="loginForm" class="d-flex flex-column">
+      <div class="input-group mb-3">
+        <input
+          type="email"
+          class="form-control"
+          placeholder="Email"
+          aria-label="Email"
+          formControlName="email"
+        />
+      </div>
+      <div class="input-group mb-3">
+        <input
+          type="password"
+          class="form-control"
+          placeholder="Password"
+          aria-label="Password"
+          formControlName="password"
+        />
+      </div>
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          value=""
+          id="flexCheckDefault"
+          formControlName="persistLogin"
+        />
+        <label class="form-check-label" for="flexCheckDefault">
+          Remember Me
+        </label>
+      </div>
+      <div class="btn-group mt-4">
+        <button
+          (click)="login()"
+          class="btn btn-primary"
+          [disabled]="!this.loginForm.valid"
+        >
+          Login
+        </button>
+        <button
+          (click)="forgotPassword()"
+          class="btn btn-secondary"
+          disabled="!this.loginForm.valid"
+        >
+          Forgot Password
+        </button>
+      </div>
+      <a (click)="this.registerInstead()" class="card-link pe-auto">
+        Not a user? Register instead
+      </a>
+    </form>
+  </div>
+</div>

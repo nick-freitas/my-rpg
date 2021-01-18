@@ -2,8 +2,8 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-12 col-md-6">
-        <h6>About</h6>
-        <p class="text-justify">
+        <h6>My RPG</h6>
+        <p class="text-justify" i18n>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
           augue ipsum, congue vitae commodo et, pharetra ac tellus. Sed at
           efficitur lacus. Suspendisse eget purus pulvinar, auctor massa ac,
@@ -17,45 +17,32 @@
       </div>
 
       <div class="col-xs-6 col-md-3">
-        <h6>Categories</h6>
+        <h6 i18n>Donate to support us</h6>
         <ul class="footer-links">
-          <li><a href="http://scanfcode.com/category/c-language/">C</a></li>
           <li>
-            <a href="http://scanfcode.com/category/front-end-development/"
-              >UI Design</a
-            >
+            <a href="https://www.patreon.com/">Patreon</a>
           </li>
           <li>
-            <a href="http://scanfcode.com/category/back-end-development/"
-              >PHP</a
-            >
+            <a href="https://www.paypal.com/us/home">Paypal</a>
           </li>
           <li>
-            <a href="http://scanfcode.com/category/java-programming-language/"
-              >Java</a
-            >
-          </li>
-          <li><a href="http://scanfcode.com/category/android/">Android</a></li>
-          <li>
-            <a href="http://scanfcode.com/category/templates/">Templates</a>
+            <a href="https://onlyfans.com/">OnlyFans</a>
           </li>
         </ul>
       </div>
 
       <div class="col-xs-6 col-md-3">
-        <h6>Quick Links</h6>
+        <h6 i18n>Quick Links</h6>
         <ul class="footer-links">
-          <li><a href="http://scanfcode.com/about/">About Us</a></li>
-          <li><a href="http://scanfcode.com/contact/">Contact Us</a></li>
+          <li><a [routerLink]="['/learn-more']" i18n>Learn More</a></li>
           <li>
-            <a href="http://scanfcode.com/contribute-at-scanfcode/"
-              >Contribute</a
-            >
+            <a [routerLink]="['/request-new-game-system']" i18n>
+              Request New Game System
+            </a>
           </li>
-          <li>
-            <a href="http://scanfcode.com/privacy-policy/">Privacy Policy</a>
-          </li>
-          <li><a href="http://scanfcode.com/sitemap/">Sitemap</a></li>
+          <li><a [routerLink]="['/contact-us']" i18n>Contact Us</a></li>
+          <li><a [routerLink]="['/privacy-policy']" i18n>Privacy Policy</a></li>
+          <li><a [routerLink]="['/sitemap']" i18n>Sitemap</a></li>
         </ul>
       </div>
     </div>

@@ -1,8 +1,8 @@
 <div class="container page-container">
   <div>
-    <h1 class="display-4">Published Adventures</h1>
+    <h1 class="display-4" i18n>Published Adventures</h1>
 
-    <p class="lead">
+    <p class="lead" i18n>
       From here you can make your published adventures active or inactive, and
       edit them, modify them, and set pricing guidelines.
     </p>
@@ -12,7 +12,7 @@
     <li class="list-group-item list-group-item-action disabled">
       <div class="item-content d-flex flex-column w-100">
         <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1">
+          <h5 class="mb-1" i18n>
             Create a new Adventure (Not available at the moment)
           </h5>
         </div>
@@ -31,16 +31,11 @@
       <div class="item-content d-flex flex-column w-100">
         <div class="d-flex w-100 justify-content-between">
           <h5 class="mb-1">{{ item.name }}</h5>
-          <small>{{ item.published | date }}</small>
+          <!-- <small>{{ item.published | date }}</small> -->
         </div>
         <p class="mb-1">{{ item.description | slice: 0:30 }}...</p>
         <div class="d-flex justify-content-between">
-          <small>
-            
-            {{ (this.userService.getPublicUserInfo(item.author) |
-            async)?.name }}
-          
-          </small>
+          <small> {{item._author.displayName}} </small>
           <small style="font-style: italic" *ngIf="item.series"
             >{{ item.series }}
             <!-- <span *ngIf="item.seriesTotal">

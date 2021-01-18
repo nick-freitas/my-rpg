@@ -1,0 +1,75 @@
+<div class="container page-container">
+  <div *ngIf="section$ | async as section">
+    <div class="card">
+      <h5 class="card-header">{{ section.name }}</h5>
+      <div class="card-body">
+        <quill-editor [formControl]="editorContent"> </quill-editor>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            (click)="saveSectionContent()"
+            i18n
+          >
+            Save Changes
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            (click)="revertChanges()"
+            i18n
+          >
+            Revert Changes
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="qe-container"></div>
+    <div class="card progression-container">
+      <h5 class="card-header" i18n>Progression</h5>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" *ngIf="!section.progressions.length" i18n>
+            This currently has no option.
+          </li>
+          <li
+            class="list-group-item"
+            *ngFor="let prog of section.progressions"
+            [routerLink]="['..', prog.id]"
+          >
+            {{ prog.descriptor }}
+          </li>
+        </ul>
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="createNewProgression()"
+            i18n
+          >
+            Add a new progression option
+          </button>
+          <div ngbDropdown class="d-inline-block">
+            <button
+              class="btn btn-primary"
+              id="dropdownBasic1"
+              ngbDropdownToggle
+              i18n
+            >
+              Add existing section
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button
+                ngbDropdownItem
+                *ngFor="let prog of possibleProgressions$ | async"
+                (click)="addProgression(prog.id)"
+              >
+                {{ prog.name }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

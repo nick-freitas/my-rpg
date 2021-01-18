@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "my-rpg-7312": {
+      "hosting": {
+        "my-rpg": [
+          "my-rpg-7312"
+        ]
+      }
+    }
+  }
+}

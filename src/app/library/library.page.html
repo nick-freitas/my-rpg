@@ -2,7 +2,7 @@
   <div>
     <h1 class="display-4">Library</h1>
 
-    <p class="lead">
+    <p class="lead" i18n>
       Go back to the <a routerLink="/">store</a> to find more adventures, or use
       the search bar on the top to look for something specific.
     </p>
@@ -28,13 +28,13 @@
       <div class="item-content d-flex flex-column w-100">
         <div class="d-flex w-100 justify-content-between">
           <h5 class="mb-1">{{ gamebook.name }}</h5>
-          <small>{{ gamebook.published | date }}</small>
+          <!-- <small>{{ gamebook.published | date }}</small> -->
         </div>
         <p class="mb-1">{{ gamebook.description | slice: 0:30 }}...</p>
         <div class="d-flex justify-content-between">
           <small>
             {{ (this.userService.getPublicUserInfo(gamebook.author) |
-            async)?.name }}
+            async)?.displayName }}
           </small>
           <small style="font-style: italic" *ngIf="gamebook.series"
             >{{ gamebook.series }}

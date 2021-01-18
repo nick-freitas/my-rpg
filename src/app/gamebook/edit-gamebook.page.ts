@@ -28,11 +28,11 @@ export class EditGamebookPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.gamebook$ = this.route.paramMap.pipe(
-      switchMap((params) => {
-        const selectedId = Number(params.get('gamebookId'));
-        return this.gamebookService.getGamebookById(selectedId);
-      })
-    );
+    // this.gamebook$ = this.route.paramMap.pipe(
+    //   switchMap((value, index) => {
+    //     const selectedId = Number(value.get('gamebookId'));
+    //     return this.gamebookService.getGamebookById(selectedId);
+    //   })
+    // );
   }
 }

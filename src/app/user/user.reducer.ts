@@ -16,9 +16,9 @@ const initialState: UserState = {
 
 export const UserReducer = createReducer(
   initialState,
-  on(UserActions.LoginAction, (state, user) => ({
+  on(UserActions.LoginAction, (state, { email, password }) => ({
     ...state,
-    user,
+    loading: true,
   })),
   on(UserActions.LoginSuccessAction, (state, { user }) => ({
     ...state,
