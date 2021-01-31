@@ -40,7 +40,7 @@ export class RegisterModeComponent implements OnInit {
 
     this.userService
       .register(registerValues)
-      .then((_) => this.router.navigate(['/']))
+      .then((_) => this.router.navigate(['/profile']))
       .catch((error: string) => (this.registerErrorMessage = error));
   }
 }

@@ -1,0 +1,17 @@
+<div class="item-content d-flex flex-column w-100" *ngIf="gamebook">
+  <div class="d-flex w-100 flex-column">
+    <h5 class="mb-1">{{ gamebook.name }}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">
+      <span i18n>By: </span>{{ gamebook?._author?.displayName }}
+    </h6>
+  </div>
+  <p class="mb-1">
+    {{ gamebook.description }}
+  </p>
+  <div class="d-flex justify-content-between">
+    <!-- <small>{{ gamebook?._author?.displayName }}</small> -->
+    <small style="font-style: italic" *ngIf="gamebook.series"
+      >{{ gamebook.series }}
+    </small>
+  </div>
+</div>

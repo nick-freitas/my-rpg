@@ -1,1 +1,29 @@
-<p>user-profile works!</p>
+<div class="container page-container">
+  <div class="card rounded mt-5 mb-5">
+    <div class="card-header" i18n>Profile Settings</div>
+    <div class="card-body">
+      <form>
+        <div class="form-group">
+          <label for="name" i18n>Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="name"
+            placeholder="Enter name"
+            [formControl]="name"
+          />
+        </div>
+
+        <button
+          type="button"
+          (click)="saveProfile()"
+          class="btn btn-primary"
+          [disabled]="!this.uid"
+          i18n
+        >
+          Save Profile
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

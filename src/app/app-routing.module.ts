@@ -8,6 +8,7 @@ import { LoginPage } from './login/login.page';
 import { LogoutPage } from './logout.page';
 import { NotFoundPage } from './not-found.page';
 import { PublishedBooksPage as PublishedBooksPage } from './published-books/published-books.page';
+import { UserProfileComponent } from './user/user-profile.component';
 
 const routes: Routes = [
   {
@@ -35,6 +36,11 @@ const routes: Routes = [
   {
     path: 'published-books',
     component: PublishedBooksPage,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'profile',
+    component: UserProfileComponent,
     canActivate: [AuthGuard],
   },
   {

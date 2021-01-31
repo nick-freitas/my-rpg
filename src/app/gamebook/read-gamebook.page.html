@@ -1,7 +1,7 @@
 <div class="container page-container">
   <div class="card" *ngIf="gamebook$ | async as gamebook">
     <div class="card-body">
-      <h5 class="card-title">{{ gamebook.name }}</h5>
+      <h5 class="card-title">{{ gamebook?.name }}</h5>
     </div>
   </div>
 
@@ -16,8 +16,8 @@
     <button
       type="button"
       class="btn btn-primary"
-      *ngFor="let prog of section.progressions"
-      [routerLink]="['/gamebook',gamebookId, 'read', prog.id]"
+      *ngFor="let prog of section._progressions"
+      [routerLink]="['/gamebook',gamebookId, 'read', prog.destination]"
     >
       {{prog.descriptor}}
     </button>

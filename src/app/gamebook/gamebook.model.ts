@@ -1,14 +1,11 @@
-import {
-  AngularFirestoreDocument,
-  DocumentReference,
-} from '@angular/fire/firestore';
 import { User } from '../user/user.model';
 
 export interface Progression {
   id: string;
   gamebookId: string;
-  sectionId: string;
   descriptor: string;
+  destination: string;
+  //
   dcType?: string;
   dcValue?: number;
 }
@@ -19,24 +16,27 @@ export interface Section {
   name: string;
   content: string;
   isStartingPoint?: boolean;
-  progressions: number[];
+  progressions: string[];
   _progressions?: Progression[];
 }
 
 export interface GameBook {
   id: string;
   img?: string;
-  author: DocumentReference<User>;
-  _author: User;
+  author: string;
+  _author?: User;
   name: string;
   description: string;
   series?: string;
   booknumber?: number;
   systemId: string;
-  _system: System;
+  _system?: System;
   published: Date;
   isFeatured?: boolean;
   active: boolean;
+  price: number;
+  ownedByUser: boolean;
+  publishedByUser: boolean;
 }
 
 export interface System {

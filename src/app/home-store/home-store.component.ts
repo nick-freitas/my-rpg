@@ -26,7 +26,7 @@ export class HomeStoreComponent implements OnInit {
     public gamebookService: GamebookService,
     public userService: UserService
   ) {
-    this.store$ = this.gamebookService.getPublishedAdventures();
+    this.store$ = this.gamebookService.getHomepageAdventures();
   }
 
   ngOnInit(): void {}

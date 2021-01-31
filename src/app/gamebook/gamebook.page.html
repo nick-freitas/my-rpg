@@ -4,22 +4,41 @@
       <img [src]="gamebook.img" class="card-img-top" />
       <div class="card-body">
         <h5 class="card-title">{{ gamebook.name }}</h5>
-        <!-- <div class="d-flex justify-content-between"> -->
-        <h6 class="card-subtitle mb-2 text-muted">{{ gamebook.series }}</h6>
-        <!-- <h6 class="card-subtitle mb-2 text-muted">{{ gamebook.author }}</h6> -->
-        <!-- </div> -->
+        <div class="d-flex w-100">
+          <!-- <h6 class="card-subtitle mb-2 text-muted">{{ gamebook.series }}</h6> -->
+          <h6 class="card-subtitle mb-2 text-muted">
+            <span i18n>By: </span>{{ gamebook?._author?.displayName }}
+          </h6>
+        </div>
         <p class="card-text">{{ gamebook.description }}</p>
-        <a [routerLink]="['read']" class="btn btn-primary"> Read Adventure </a>
-        <!-- <a [routerLink]="['edit']" class="btn btn-secondary">
-          Edit Adventure
-        </a> -->
+        <div class="btn-group" role="group">
+          <button
+            [routerLink]="['read']"
+            class="btn btn-primary"
+            *ngIf="gamebook?.ownedByUser || gamebook?.publishedByUser; else buyButton"
+          >
+            Read Gamebook
+          </button>
+          <button
+            [routerLink]="['edit']"
+            class="btn btn-secondary"
+            *ngIf="gamebook?.publishedByUser"
+          >
+            Edit Gamebook
+          </button>
+          <ng-template #buyButton>
+            <button [routerLink]="['buy']" class="btn btn-primary">
+              Buy now for {{gamebook.price | currency}}
+            </button>
+          </ng-template>
+        </div>
       </div>
     </div>
 
     <div
-      class="card"
+      class="card mt-4"
       id="section-card"
-      *ngIf="gamebook.author === (user$ | async)?.user?.id"
+      *ngIf="gamebook?.author?.id === (this.userService.user$ | async)?.id"
     >
       <div class="card-body">
         <h5 class="card-title">Sections</h5>

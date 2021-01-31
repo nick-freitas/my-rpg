@@ -7,6 +7,7 @@ import { GameBook } from './gamebook.model';
 import AppState from '../app-state.model';
 import { UserState } from '../user/user.reducer';
 import { select, Store } from '@ngrx/store';
+import { UserService } from '../user/user.service';
 
 @Component({
   templateUrl: './gamebook.page.html',
@@ -16,9 +17,9 @@ import { select, Store } from '@ngrx/store';
         display: block;
       }
 
-      .card-body .btn:not(:first-of-type) {
+      /* .card-body .btn:not(:first-of-type) {
         margin-left: 1rem;
-      }
+      } */
 
       #starting-point {
         font-style: italic;
@@ -29,24 +30,20 @@ import { select, Store } from '@ngrx/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GamebookPage implements OnInit {
-  user$: Observable<UserState>;
-  gamebook$: Observable<GameBook>;
+  gamebook$: Observable<GameBook> | undefined;
 
   constructor(
     private route: ActivatedRoute,
     private gamebookService: GamebookService,
-    private store: Store<AppState>
-  ) {
-    this.gamebook$ = new Observable<GameBook>();
-    this.user$ = this.store.pipe(select('user'));
-  }
+    public userService: UserService
+  ) {}
 
   ngOnInit(): void {
-    // this.gamebook$ = this.route.paramMap.pipe(
-    //   switchMap((params) => {
-    //     const selectedId = Number(params.get('gamebookId'));
-    //     return this.gamebookService.getGamebookById(selectedId);
-    //   })
-    // );
+    this.gamebook$ = this.route.paramMap.pipe(
+      switchMap((params) => {
+        const selectedId = String(params.get('gamebookId'));
+        return this.gamebookService.getGamebookById(selectedId);
+      })
+    );
   }
 }

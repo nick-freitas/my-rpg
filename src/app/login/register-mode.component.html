@@ -35,14 +35,14 @@
           id="flexCheckDefault"
           formControlName="persistLogin"
         />
-        <label class="form-check-label" for="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault" i18n>
           Remember Me
         </label>
       </div>
-      <a (click)="register()" class="btn btn-primary">Register</a>
-      <a (click)="this.registerInstead()" class="pe-auto card-link">
+      <a (click)="register()" class="btn btn-primary" i18n>Register</a>
+      <button (click)="this.registerInstead()" class="btn btn-link text-start">
         Already a user? Login instead
-      </a>
+      </button>
     </form>
   </div>
 </div>

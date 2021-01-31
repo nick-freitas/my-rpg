@@ -30,6 +30,7 @@ import { LoginModeComponent } from './login/login-mode.component';
 import { LogoutPage } from './logout.page';
 import { RegisterModeComponent } from './login/register-mode.component';
 import { UserProfileComponent } from './user/user-profile.component';
+import { GamebookCardComponent } from './gamebook-card/gamebook-card.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { UserProfileComponent } from './user/user-profile.component';
     LogoutPage,
     RegisterModeComponent,
     UserProfileComponent,
+    GamebookCardComponent,
   ],
   imports: [
     BrowserModule,

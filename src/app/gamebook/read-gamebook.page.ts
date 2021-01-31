@@ -19,7 +19,7 @@ import { Router } from '@angular/router';
 export class ReadGamebookPage implements OnInit {
   gamebook$: Observable<GameBook | undefined>;
   section$: Observable<Section | undefined>;
-  gamebookId: string | undefined;
+  gamebookId: string | null | undefined;
   sectionId: string | undefined;
   sectionContent: string | undefined;
 
@@ -39,21 +39,23 @@ export class ReadGamebookPage implements OnInit {
     // why does switchmap/pipe not work
     this.route.paramMap.subscribe((pm) => {
       const sid = pm.get('sectionId');
-      this.gamebookId = String(pm.get('gamebookId'));
+      this.gamebookId = pm.get('gamebookId');
+
+      if (!this.gamebookId) {
+        return;
+      }
 
       console.log(sid);
       if (!sid) {
-        this.section$ = this.gamebookService.getStartingPointSection(
-          this.gamebookId
-        );
+        this.section$ = this.gamebookService
+          .getStartingPointSection(this.gamebookId)
+          .pipe(tap((s) => (this.sectionContent = s?.content)));
       } else {
         this.sectionId = String(sid);
 
-        // this.gamebook$ = this.gamebookService.getGamebookById(this.gamebookId);
-
         this.section$ = this.gamebookService
           .getSectionById(this.sectionId)
-          .pipe(tap((s) => (this.sectionContent = s && s.content)));
+          .pipe(tap((s) => (this.sectionContent = s?.content)));
       }
     });
   }

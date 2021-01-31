@@ -26,7 +26,6 @@ export class UserService {
   user$: Observable<User | null | undefined>;
 
   constructor(
-    private store: Store<AppState>,
     private firestore: AngularFirestore,
     public auth: AngularFireAuth
   ) {
@@ -43,7 +42,9 @@ export class UserService {
     this.user$ = this.auth.authState.pipe(
       switchMap((user) => {
         if (user) {
-          return this.firestore.doc<User>(`users/${user.uid}`).valueChanges();
+          return this.firestore
+            .doc<User>(`users/${user.uid}`)
+            .valueChanges({ idField: 'id' });
         }
 
         return of(null);
@@ -51,37 +52,37 @@ export class UserService {
     );
   }
 
-  logout() {
+  logout(): Promise<void> {
     return this.auth.signOut();
   }
 
-  async register({ email, password, persistLogin }: LoginRegisterValues) {
-    let credentials;
-    try {
-      await this.auth.createUserWithEmailAndPassword(email, password);
-    } catch (error) {
-      throw error.message;
-    }
-
-    this.handlePostLogin(persistLogin, credentials);
-  }
-
-  async login({
+  register({
     email,
     password,
     persistLogin,
   }: LoginRegisterValues): Promise<void> {
-    let credentials;
-    try {
-      credentials = await this.auth.signInWithEmailAndPassword(email, password);
-    } catch (error) {
-      throw error.message;
-    }
-
-    this.handlePostLogin(persistLogin, credentials);
+    return new Promise((resolve, reject) => {
+      this.auth
+        .createUserWithEmailAndPassword(email, password)
+        .then((credentials) =>
+          resolve(this.handlePostLogin(persistLogin, credentials))
+        )
+        .catch((err) => reject(err.message));
+    });
   }
 
-  handlePostLogin(persistLogin: boolean, credentials: any) {
+  login({ email, password, persistLogin }: LoginRegisterValues): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.auth
+        .signInWithEmailAndPassword(email, password)
+        .then((credentials) =>
+          resolve(this.handlePostLogin(persistLogin, credentials))
+        )
+        .catch((err) => reject(err.message));
+    });
+  }
+
+  handlePostLogin(persistLogin: boolean, credentials: any): Promise<void> {
     if (persistLogin) {
       this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     } else {
@@ -91,16 +92,23 @@ export class UserService {
     return this.updateUser(credentials.user);
   }
 
-  private updateUser({ uid, email, displayName, photoURL }: any) {
+  updateDisplayName(uid: string, displayName: string): Promise<void> {
     const userRef: AngularFirestoreDocument<User> = this.firestore.doc(
       `users/${uid}`
     );
 
-    const data = {
+    return userRef.update({ displayName });
+  }
+
+  updateUser({ uid, email, displayName }: any): Promise<void> {
+    const userRef: AngularFirestoreDocument<User> = this.firestore.doc(
+      `users/${uid}`
+    );
+
+    const data: any = {
       id: uid,
       email,
-      displayName,
-      photoURL,
+      displayName: displayName || email,
     };
 
     return userRef.set(data, { merge: true });

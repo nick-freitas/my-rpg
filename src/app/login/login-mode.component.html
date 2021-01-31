@@ -31,7 +31,7 @@
           id="flexCheckDefault"
           formControlName="persistLogin"
         />
-        <label class="form-check-label" for="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault" i18n>
           Remember Me
         </label>
       </div>
@@ -40,20 +40,27 @@
           (click)="login()"
           class="btn btn-primary"
           [disabled]="!this.loginForm.valid"
+          i18n
         >
           Login
         </button>
+      </div>
+
+      <div class="btn-group d-flex flex-column">
         <button
-          (click)="forgotPassword()"
-          class="btn btn-secondary"
-          disabled="!this.loginForm.valid"
+          (click)="this.registerInstead()"
+          class="btn btn-link text-start"
         >
-          Forgot Password
+          Not a user? Register instead
+        </button>
+        <button
+          (click)="this.forgotPassword()"
+          class="btn btn-link text-start"
+          disabled
+        >
+          Forgot your password? Reset your password
         </button>
       </div>
-      <a (click)="this.registerInstead()" class="card-link pe-auto">
-        Not a user? Register instead
-      </a>
     </form>
   </div>
 </div>

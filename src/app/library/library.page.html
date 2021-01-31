@@ -25,22 +25,7 @@
       aria-current="true"
       *ngFor="let gamebook of gamebooks"
     >
-      <div class="item-content d-flex flex-column w-100">
-        <div class="d-flex w-100 justify-content-between">
-          <h5 class="mb-1">{{ gamebook.name }}</h5>
-          <!-- <small>{{ gamebook.published | date }}</small> -->
-        </div>
-        <p class="mb-1">{{ gamebook.description | slice: 0:30 }}...</p>
-        <div class="d-flex justify-content-between">
-          <small>
-            {{ (this.userService.getPublicUserInfo(gamebook.author) |
-            async)?.displayName }}
-          </small>
-          <small style="font-style: italic" *ngIf="gamebook.series"
-            >{{ gamebook.series }}
-          </small>
-        </div>
-      </div>
+      <app-gamebook-card [gamebook]="gamebook"></app-gamebook-card>
     </a>
   </div>
 </div>

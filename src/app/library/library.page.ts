@@ -16,13 +16,13 @@ import { UserService } from '../user/user.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LibraryPage implements OnInit {
-  gamebooks$: Observable<GameBook[]> | undefined;
+  gamebooks$: Observable<GameBook[] | undefined>;
 
   constructor(
     public gamebookService: GamebookService,
     public userService: UserService
   ) {
-    // this.gamebooks$ = this.gamebookService.getLibrary();
+    this.gamebooks$ = this.gamebookService.getLibrary();
   }
 
   ngOnInit(): void {}

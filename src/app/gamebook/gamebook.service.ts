@@ -1,12 +1,11 @@
-//https://medium.com/@usman_qb/angular-11-state-management-with-ngrx-side-effects-1d37830fbd64
-
+// https://medium.com/@usman_qb/angular-11-state-management-with-ngrx-side-effects-1d37830fbd64
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { combineLatest, from, iif, merge, Observable, of, timer } from 'rxjs';
-import { map, mergeAll, switchMap } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { User } from '../user/user.model';
 import { UserService } from '../user/user.service';
-import { GameBook, Section } from './gamebook.model';
+import { GameBook as Gamebook, Progression, Section } from './gamebook.model';
 
 @Injectable()
 export class GamebookService {
@@ -15,104 +14,148 @@ export class GamebookService {
     private userService: UserService
   ) {}
 
-  private dbGamebookToModuleGamebook(gamebook: any): GameBook {
+  private dbGamebookToModuleGamebook(gamebook: any): Gamebook {
     return { ...gamebook, published: gamebook?.published?.toDate() };
   }
 
-  getGamebooks({ id, idList, limit, featured }: any): Observable<GameBook[]> {
+  // by id doesnt work
+  getGamebooks({ id, idList, limit, featured }: any): Observable<Gamebook[]> {
     return this.firestore
-      .collection<GameBook>('gamebooks', (ref) => {
-        let query = ref;
+      .collection<Gamebook>('gamebooks', (ref) => {
+        let query: any = ref;
 
         if (id) {
-          query.where('__name__', '==', id);
-        }
-
-        if (limit) {
-          query.limit(limit);
-        }
-
-        if (featured) {
-          query.where('featured', '==', featured);
+          query = query.where('id', '==', id);
+          limit = limit || 1;
         }
 
         if (idList) {
-          query.where('__name__', '==', idList);
+          console.log('idlist', idList);
+          query = query.where('id', 'in', idList);
+        }
+
+        if (featured) {
+          query = query.where('featured', '==', featured);
+        }
+
+        if (limit) {
+          query = query.limit(limit);
         }
 
         return query;
       })
-      .valueChanges({ idField: 'id' })
+      .valueChanges()
       .pipe(
         switchMap((gamebooks) => {
           const _authorIds = new Set();
-          gamebooks.forEach((gb) => _authorIds.add(gb?.author?.id));
+          gamebooks.forEach((gb) => _authorIds.add(gb?.author));
           const authorIds = Array.from(_authorIds).filter((x) => x);
-
-          return combineLatest(
+          return combineLatest([
             of(gamebooks),
             combineLatest(
               authorIds.map((authorId) =>
-                this.firestore
-                  .collection<User>('users', (ref) =>
-                    ref.where('__name__', '==', authorId)
-                  )
-                  .valueChanges()
-                  .pipe(map((users) => users[0]))
+                this.firestore.doc<User>(`users/${authorId}`).valueChanges()
               )
-            )
-          );
+            ),
+            combineLatest([this.userService.user$]),
+          ]);
         }),
-        map(([gamebooks, authors]) =>
+        map(([gamebooks, authors, user]) =>
           gamebooks.map((gb) => ({
             ...gb,
-            _author: authors.find((u) => u.id === gb?.author?.id),
+            _author: authors.find((u) => u?.id === gb?.author),
+            publishedByUser: user && user[0]?.published?.includes(gb.id),
+            ownedByUser: user && user[0]?.library?.includes(gb.id),
           }))
         ),
         map((gb) => gb.map(this.dbGamebookToModuleGamebook))
       );
   }
 
-  getGamebookById(id: number) {
-    return this.getGamebooks({ id });
+  getGamebookById(id: string): Observable<Gamebook> {
+    return this.getGamebooks({ id }).pipe(map((x) => x[0]));
   }
 
   getFeaturedAdventures() {
     return this.getGamebooks({ featured: true });
   }
 
-  getPublishedAdventures(): Observable<GameBook[]> {
+  getHomepageAdventures() {
+    return this.getGamebooks({});
+  }
+
+  getPublishedAdventures(): Observable<Gamebook[]> {
     return this.userService.user$.pipe(
-      switchMap((user) =>
-        this.getGamebooks(user?.published?.map((gbRef) => gbRef.id))
-      )
+      switchMap((user) => this.getGamebooks({ idList: user?.published || [] }))
     );
   }
 
-  getLibrary(): Observable<GameBook[] | undefined> {
+  getLibrary(): Observable<Gamebook[] | undefined> {
     return this.userService.user$.pipe(
-      switchMap((user) =>
-        this.getGamebooks(user?.library?.map((gbRef) => gbRef.id))
-      )
+      switchMap((user) => this.getGamebooks({ idList: user?.library || [] }))
     );
   }
 
   getStartingPointSection(gamebookId: string): Observable<Section | undefined> {
-    return this.firestore
-      .collection<Section>(`sections/`, (ref) =>
-        ref
-          .where('gamebookId', '==', gamebookId)
-          .where('isStartingPoint', '==', true)
-          .limit(1)
-      )
-      .valueChanges({ idField: 'id' })
-      .pipe(mergeAll());
+    return this.getSection({ startingPoint: true, gamebookId });
   }
 
   getSectionById(sectionId: string): Observable<Section | undefined> {
+    return this.getSection({ id: sectionId });
+  }
+
+  getSection({
+    id,
+    gamebookId,
+    startingPoint,
+  }: any): Observable<Section | undefined> {
+    console.log(id, gamebookId, startingPoint);
     return this.firestore
-      .doc<Section>(`sections/${sectionId}`)
-      .valueChanges({ idField: 'id' });
+      .collection<Section>('sections', (ref) => {
+        let query: any = ref;
+        query = query.limit(1);
+
+        if (startingPoint) {
+          query = query
+            .where('isStartingPoint', '==', true)
+            .where('gamebookId', '==', gamebookId);
+        }
+
+        if (id) {
+          query = query.where('id', '==', id);
+        }
+
+        return query;
+      })
+      .valueChanges()
+      .pipe(
+        mergeAll(),
+        tap((x) => console.log('y', x)),
+        switchMap((section) => {
+          if (!section.progressions || !section.progressions.length) {
+            return combineLatest([of(section), of([])]);
+          }
+
+          return combineLatest([
+            of(section),
+            combineLatest(
+              section.progressions.map((pid) =>
+                this.firestore
+                  .doc<Progression>(`progressions/${pid}`)
+                  .valueChanges()
+              )
+            ),
+          ]);
+        }),
+        map(
+          ([section, progressions]) =>
+            <Section>{
+              ...section,
+              _progressions: progressions,
+            }
+        ),
+        tap((x) => console.log('x', x))
+      );
   }
 
   getPossibleProgressions(

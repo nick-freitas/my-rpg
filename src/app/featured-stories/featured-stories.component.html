@@ -4,9 +4,12 @@
       <img [src]="story.img" alt="" />
     </div>
     <div class="carousel-caption">
-      <button class="btn btn-link" [routerLink]="['gamebook', story.id]">
+      <a
+        class="card-link text-decoration-none"
+        [routerLink]="['gamebook', story.id]"
+      >
         <h3>{{ story.name }}</h3>
-      </button>
+      </a>
       <p>{{ story.description }}</p>
     </div>
   </ng-template>
